@@ -34,7 +34,6 @@ public class ServicosAdapter extends RecyclerView.Adapter<ServicosAdapter.Servic
     @Override
     public void onBindViewHolder(@NonNull ServicoViewHolder holder, int position) {
         Servicos servico = servicosList.get(position);
-        Log.d("DEBUG-MODE", "Vinculando item: " + servico.getDesc_servico());
         String precoFormatado = formatarPreco(servico.getValor_servico());
         holder.descricaoServico.setText(servico.getDesc_servico());
         holder.precoServico.setText("R$ " + precoFormatado );
@@ -46,7 +45,6 @@ public class ServicosAdapter extends RecyclerView.Adapter<ServicosAdapter.Servic
     }
 
     public void atualizarLista(List<Servicos> novaLista) {
-        Log.d("DEBUG-MODE", "Atualizando lista no adapter. Tamanho da nova lista: " + novaLista.size());
         servicosList.clear();
         servicosList.addAll(novaLista);
         notifyDataSetChanged();
