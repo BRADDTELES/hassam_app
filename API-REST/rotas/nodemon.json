@@ -1,0 +1,9 @@
+{
+    "env" : {
+        "mysql_user" : "root",
+        "mysql_password" : "root",
+        "mysql_database" : "hassam",
+        "mysql_host" : "localhost",
+        "mysql_port" : 3306
+    }
+}

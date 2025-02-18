@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- login_screen -->
+    <string name="app_name">Hassam App</string>
+    <string name="screen_login_title_username">Usuário</string>
+    <string name="screen_login_title_password">Senha</string>
+    <string name="screen_login_hint_username">Nome de usuário</string>
+    <string name="screen_login_hint_password">Senha de usuário</string>
+    <string name="screen_login_button_login">Entrar</string>
+    <string name="title_activity_screen_home">screen_home_activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- fragments_name -->
+    <string name="menu_home">Ínicio</string>
+    <string name="menu_agendamentos">Agendamentos</string>
+    <string name="menu_produtos">Produtos</string>
+    <string name="menu_servicos">Serviços</string>
+
+    <!-- fragment_servicos -->
+    <string name="search_bar_hint">Pesquisar serviço</string>
+
+
+</resources>
