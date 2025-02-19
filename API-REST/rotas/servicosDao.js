@@ -4,7 +4,8 @@ const url = require('url');
 const querystring = require('querystring');
 const mysql = require('./mysql2').pool;
 
-//Não faço ideia do motivo, mas remover o request mesmo que não utilizado quebra o método
+
+// http:localhost:3000/api.hassam/servicos-dao/createServico
 router.post('/createServico', (req, res, next) => {
     const {id_usuario, desc_servico, valor_servico} = req.body
     const servicos = {id_usuario, desc_servico, valor_servico}
@@ -37,6 +38,7 @@ router.post('/createServico', (req, res, next) => {
     });
 });
 
+// http:localhost:3000/api.hassam/servicos-dao/getServicoByDesc?desc_servico=corte&id_usuario=1
 router.get('/getServicoByDesc', (req, res, next) => { 
     const reqURL = url.parse(req.url);
     const queryParams = querystring.parse(reqURL.query);
@@ -69,36 +71,41 @@ router.get('/getServicoByDesc', (req, res, next) => {
     });
 });
 
-router.get('/getAllServico', (req, res, next) => { 
-    const reqURL = url.parse(req.url);
-    const queryParams = querystring.parse(reqURL.query);
-    const param = queryParams.id_usuario;
+// http://localhost:3000/api.hassam/servicos-dao/getAllServico?id_usuario=1
+router.get('/getAllServico', (req, res) => {
+    const { id_usuario } = req.query;
+
+    if (!id_usuario) {
+        return res.status(400).send({ error: "O parâmetro 'id_usuario' é obrigatório." });
+    }
 
     mysql.getConnection((error, conn) => {
-        if (error){
-            return res.status(500).send({
-                error : error,
-                response : null
-            });
+        if (error) {
+            return res.status(500).send({ error: "Erro ao conectar ao banco de dados." });
         }
+
         conn.query(
-            'select id_servico, desc_servico, valor_servico, status_servico from servicos where id_usuario = ? and status_servico = \"ativo\";',
-            [param],
-            (error, resposta, field) => {
+            `SELECT DISTINCT id_servico, desc_servico, valor_servico 
+             FROM servicos 
+             WHERE id_usuario = ? AND status_servico = "ativo";`,
+            [id_usuario],
+            (error, resultado) => {
                 conn.release();
-                if (error){
-                    return res.status(500).send({
-                        error : error,
-                        response : null
-                    });
+
+                if (error) {
+                    return res.status(500).send({ error: "Erro ao buscar os serviços." });
                 }
-                res.status(201).send({
-                    response : resposta
-                });
+
+                if (resultado.length === 0) {
+                    return res.status(404).send({ message: "Nenhum serviço ativo encontrado." });
+                }
+
+                res.status(200).send({ response: resultado });
             }
-        )
+        );
     });
 });
+
 
 router.post('/updateServico', (req, res, next) => {
     const {id_servico, id_usuario, desc_servico, valor_servico} = req.body
