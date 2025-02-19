@@ -68,14 +68,4 @@ public class ServicosDao {
         return  response;
     }
 
-    // NÃO USAR // Não requer nenhum atributo
-    /*public String deleteServicoInativo(@NonNull Servicos servico) { //// Se você está usando esse método
-        String usuarioJson = this.toJson(servico);                  // você está fazendo algo errado
-        HttpHelper httpHelper = new HttpHelper();
-        String response =
-                httpHelper.post(
-                        "/api.hassam/servicos-dao/deleteServicoInativo",
-                        usuarioJson);
-        return  response;
-    }*/
 }

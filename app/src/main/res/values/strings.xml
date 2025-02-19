@@ -22,7 +22,7 @@
     <string name="menu_servicos">Serviços</string>
 
     <!-- fragment_servicos -->
-    <string name="search_bar_hint">Pesquisar serviço</string>
+    <string name="search_bar_hint">Buscar de serviços</string>
 
 
 </resources>
