@@ -18,7 +18,7 @@ public class HttpHelper {
     }
 
     public static final String URL_BASE =
-            "http://:3000"; // IP_DO_PC configurar também em network_security_config.xml
+            "http://192.168.48.231:3000"; // IP_DO_PC configurar também em network_security_config.xml
 
     public String get(String url) {
         String responseString = "";
