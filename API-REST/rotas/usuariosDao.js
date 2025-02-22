@@ -4,8 +4,8 @@ const url = require('url');
 const querystring = require('querystring');
 const mysql = require('./mysql2').pool;
 
+//Não faço ideia do motivo, mas remover o request mesmo que não utilizado quebra o método
 
-// http:localhost:3000/api.hassam/usuarios-dao/createUsuario
 router.post('/createUsuario', (req, res, next) => {
     const {login_usuario, senha_usuario, nome_usuario} = req.body
     const usuarios = {login_usuario, senha_usuario, nome_usuario}
@@ -37,7 +37,6 @@ router.post('/createUsuario', (req, res, next) => {
     });
 });
 
-// http:localhost:3000/api.hassam/usuarios-dao/getUsuarioById?id_usuario=1
 router.get('/getUsuarioById', (req, res, next) => { 
     const reqURL = url.parse(req.url);
     const queryParams = querystring.parse(reqURL.query);
@@ -68,12 +67,11 @@ router.get('/getUsuarioById', (req, res, next) => {
     });
 });
 
-// http:localhost:3000/api.hassam/usuarios-dao/getUsuarios
-router.get('/getUsuarios', (req, res, next) => { 
+router.get('/getUsuarioByLoginSenha', (req, res, next) => { 
     const reqURL = url.parse(req.url);
     const queryParams = querystring.parse(reqURL.query);
-    const param = queryParams.id_usuario;
-
+    const param1 = queryParams.login_usuario;
+    const param2 = queryParams.senha_usuario;
     mysql.getConnection((error, conn) => {
         if (error){
             return res.status(500).send({
@@ -82,8 +80,8 @@ router.get('/getUsuarios', (req, res, next) => {
             });
         }
         conn.query(
-            'select * from usuarios;',
-            [param],
+            'select * from usuarios where login_usuario = binary ? and senha_usuario = binary ?;',
+            [param1, param2],
             (error, resposta, field) => {
                 conn.release();
                 if (error){
@@ -99,41 +97,6 @@ router.get('/getUsuarios', (req, res, next) => {
         )
     });
 });
-
-// http://localhost:3000/api.hassam/usuarios-dao/getUsuarioByLoginSenha?login_usuario=admin&senha_usuario=123
-router.get('/getUsuarioByLoginSenha', (req, res) => {
-    const { login_usuario, senha_usuario } = req.query;
-
-    if (!login_usuario || !senha_usuario) {
-        return res.status(400).send({ error: "Os parâmetros 'login_usuario' e 'senha_usuario' são obrigatórios." });
-    }
-
-    mysql.getConnection((error, conn) => {
-        if (error) {
-            return res.status(500).send({ error: "Erro ao conectar ao banco de dados." });
-        }
-
-        const sql = `SELECT id_usuario, nome_usuario, login_usuario 
-                     FROM usuarios 
-                     WHERE login_usuario = BINARY ? 
-                     AND senha_usuario = BINARY ?;`;
-
-        conn.query(sql, [login_usuario, senha_usuario], (error, resultado) => {
-            conn.release();
-
-            if (error) {
-                return res.status(500).send({ error: "Erro ao buscar usuário." });
-            }
-
-            if (resultado.length === 0) {
-                return res.status(404).send({ message: "Usuário ou senha incorretos." });
-            }
-
-            res.status(200).send({ response: resultado[0] });
-        });
-    });
-});
-
 
 router.get('/getSenhaByLoginName', (req, res, next) => { 
     const reqURL = url.parse(req.url);
@@ -166,7 +129,6 @@ router.get('/getSenhaByLoginName', (req, res, next) => {
     });
 });
 
-// http:localhost:3000/api.hassam/usuarios-dao/updateUsuario
 router.post('/updateUsuario', (req, res, next) => {
     const {id_usuario, login_usuario, senha_usuario, nome_usuario} = req.body
     const usuarios = {id_usuario, login_usuario, senha_usuario, nome_usuario}
@@ -198,7 +160,6 @@ router.post('/updateUsuario', (req, res, next) => {
     });
 });
 
-// http:localhost:3000/api.hassam/usuarios-dao/deleteUsuario
 router.post('/deleteUsuario', (req, res, next) => {
     const {id_usuario} = req.body
     const usuarios = {id_usuario}
